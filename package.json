@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy:db": "supabase db push",
+    "deploy:db": "supabase db push --remote",
     "deploy:functions": "supabase functions deploy --use-api --no-verify-jwt"
   },
   "dependencies": {
