@@ -634,6 +634,10 @@ svg {
   color: var(--accent);
 }
 
+.family-actions .secondary-btn {
+  margin-top: 14px;
+}
+
 .danger-btn {
   margin-top: 24px;
   background: var(--section-bg);

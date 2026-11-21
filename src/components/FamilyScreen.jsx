@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { confirmDialog, shareInvite, showBackButton } from '../telegram.js';
+import { useEffect, useRef, useState } from 'react';
+import { addToHomeScreen, checkHomeScreen, confirmDialog, shareInvite, showBackButton } from '../telegram.js';
 import Avatar from './Avatar.jsx';
 import Spinner from './Spinner.jsx';
 
@@ -9,7 +9,24 @@ export default function FamilyScreen({ state, store, onBack }) {
   const [message, setMessage] = useState(null);
   const [devLink, setDevLink] = useState(null);
 
+  const [homeScreen, setHomeScreen] = useState('unsupported');
+  const stopHomeScreenWait = useRef(null);
+
   useEffect(() => showBackButton(onBack), [onBack]);
+
+  useEffect(() => {
+    let alive = true;
+    checkHomeScreen().then((s) => alive && setHomeScreen(s));
+    return () => {
+      alive = false;
+      stopHomeScreenWait.current?.();
+    };
+  }, []);
+
+  function addIcon() {
+    stopHomeScreenWait.current?.();
+    stopHomeScreenWait.current = addToHomeScreen(() => setHomeScreen('added'));
+  }
 
   async function invite() {
     setBusy('invite');
@@ -88,6 +105,16 @@ export default function FamilyScreen({ state, store, onBack }) {
             </div>
           ) : null}
           {message ? <p className="hint center">{message}</p> : null}
+
+          {homeScreen === 'missed' || homeScreen === 'unknown' ? (
+            <>
+              <button className="secondary-btn" onClick={addIcon}>
+                Добавить значок на экран телефона
+              </button>
+              <p className="hint center">Список будет открываться сразу, без поиска бота в Telegram.</p>
+            </>
+          ) : null}
+          {homeScreen === 'added' ? <p className="hint center">Значок списка уже на экране телефона.</p> : null}
 
           {members.length > 1 ? (
             <button className="danger-btn" onClick={leave} disabled={busy !== null || !online}>

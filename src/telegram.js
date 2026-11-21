@@ -92,6 +92,33 @@ export function showBackButton(onClick) {
   };
 }
 
+// Значок приложения на главном экране телефона (Telegram 8.0+).
+// Статус: 'unsupported' | 'unknown' | 'missed' | 'added'.
+export function checkHomeScreen() {
+  if (!tg?.initData || !tg.isVersionAtLeast?.('8.0') || !tg.addToHomeScreen || !tg.checkHomeScreenStatus) {
+    return Promise.resolve('unsupported');
+  }
+  return new Promise((resolve) => {
+    try {
+      tg.checkHomeScreenStatus((status) => resolve(status || 'unknown'));
+    } catch {
+      resolve('unsupported');
+    }
+  });
+}
+
+// Показывает системный запрос «Добавить на главный экран».
+// onAdded вызывается, если пользователь согласился. Возвращает функцию отписки.
+export function addToHomeScreen(onAdded) {
+  const handler = () => {
+    tg.offEvent('homeScreenAdded', handler);
+    onAdded();
+  };
+  tg.onEvent('homeScreenAdded', handler);
+  tg.addToHomeScreen();
+  return () => tg.offEvent('homeScreenAdded', handler);
+}
+
 export function inviteTokenFrom(startParam) {
   return startParam && startParam.startsWith('inv_') ? startParam.slice(4) : null;
 }
