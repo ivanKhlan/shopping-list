@@ -80,9 +80,10 @@ npm test
 
 В Telegram у @BotFather:
 1. `/newbot` → имя и username бота (например `my_shopping_list_bot`) → получите **токен**.
-2. `/newapp` → выберите бота → название, описание, картинка 640×360 → **адрес из шага 1** →
-   короткое имя **`list`**.
+2. `/mybots` → бот → **Bot Settings → Configure Mini App → Enable Mini App** → **адрес из шага 1**.
+   Это главное Mini App бота: по нему работают ссылки-приглашения `t.me/<бот>?startapp=...`.
 3. `/mybots` → бот → **Bot Settings → Menu Button** → адрес из шага 1, текст «Список».
+4. По желанию: `/setuserpic` — аватарка бота (её же Telegram, скорее всего, берёт для значка на экране телефона).
 
 ### 3. Supabase: база
 
@@ -104,7 +105,6 @@ npm test
    | --- | --- |
    | `BOT_TOKEN` | токен из шага 2 |
    | `BOT_USERNAME` | username бота без `@` |
-   | `APP_SHORT_NAME` | `list` |
    | `APP_URL` | адрес из шага 1 |
    | `WEBHOOK_SECRET` | длинная случайная строка из букв и цифр (придумайте, 30+ символов) |
 

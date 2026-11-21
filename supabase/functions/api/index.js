@@ -5,7 +5,6 @@
 // Секреты (supabase secrets set ...):
 //   BOT_TOKEN       — токен бота от @BotFather
 //   BOT_USERNAME    — имя бота без @, например my_shopping_bot
-//   APP_SHORT_NAME  — короткое имя Mini App из /newapp, например list
 // SUPABASE_URL и SUPABASE_SERVICE_ROLE_KEY Supabase подставляет сам.
 
 import { createClient } from 'npm:@supabase/supabase-js@2.49.4';
@@ -15,7 +14,6 @@ import { verifyInitData } from '../_shared/telegramAuth.js';
 
 const BOT_TOKEN = Deno.env.get('BOT_TOKEN');
 const BOT_USERNAME = Deno.env.get('BOT_USERNAME');
-const APP_SHORT_NAME = Deno.env.get('APP_SHORT_NAME');
 
 const db = createClient(Deno.env.get('SUPABASE_URL'), Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'), {
   auth: { persistSession: false },
@@ -42,7 +40,9 @@ function json(body, status = 200) {
 // Готовим сообщение-приглашение, которое пользователь отправит выбранному
 // контакту через Telegram.WebApp.shareMessage().
 async function prepareInviteMessage(user, token) {
-  const link = `https://t.me/${BOT_USERNAME}/${APP_SHORT_NAME}?startapp=inv_${token}`;
+  // Ссылка на главное Mini App бота (BotFather → Configure Mini App).
+  // Короткое имя из /newapp не нужно.
+  const link = `https://t.me/${BOT_USERNAME}?startapp=inv_${token}`;
   const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/savePreparedInlineMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
