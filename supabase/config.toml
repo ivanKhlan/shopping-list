@@ -1,0 +1,10 @@
+# Настройки функций для Supabase CLI.
+# verify_jwt = false: вход проверяется по подписи Telegram, а не по JWT Supabase.
+
+[functions.api]
+verify_jwt = false
+entrypoint = "./functions/api/index.js"
+
+[functions.bot]
+verify_jwt = false
+entrypoint = "./functions/bot/index.js"
